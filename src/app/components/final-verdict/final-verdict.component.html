@@ -1,0 +1,51 @@
+<div class="backdrop" aria-hidden="true">
+  <img class="backdrop__art" src="art/verdict.jpg" alt="" loading="lazy" decoding="async" />
+  <span class="backdrop__bloom"></span>
+</div>
+
+<app-particles [active]="climaxReached()" />
+
+<div class="shell-narrow inner">
+  <p class="eyebrow" [class.is-in]="step() >= 0">{{ verdict.eyebrow }}</p>
+
+  <h2 class="heading" [class.is-in]="step() >= 1">{{ verdict.heading }}</h2>
+
+  <div class="beats">
+    <p class="beat" [class.is-in]="step() >= 2">{{ verdict.beats[0] }}</p>
+    <p class="beat" [class.is-in]="step() >= 3">{{ verdict.beats[1] }}</p>
+    <p class="climax" [class.is-in]="climaxReached()">{{ verdict.beats[2] }}</p>
+  </div>
+
+  <div class="closing" [class.is-in]="step() >= 5">
+    <p class="closing__lead">
+      {{ closing.lead }}<br />
+      {{ closing.lead2 }}
+    </p>
+
+    <app-stamp class="closing__stamp" [label]="closing.badge" [sub]="closing.badgeSub" />
+
+    <p class="closing__heart">
+      <span class="closing__heart-icon" aria-hidden="true">❤</span>
+      <span class="sr-only">Con éxito rotundo.</span>
+    </p>
+
+    <div class="closing__seal">
+      <p class="closing__sealed">{{ closing.sealed }}</p>
+      <p class="closing__meta">{{ closing.meta }}</p>
+    </div>
+
+    <button type="button" class="restart" (click)="restart()">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M20 12a8 8 0 1 1-2.6-5.9M20 4v4.4h-4.4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span>{{ closing.restart }}</span>
+    </button>
+  </div>
+</div>

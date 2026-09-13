@@ -1,0 +1,51 @@
+<div class="shell-narrow">
+  <header class="head" appReveal>
+    <app-phase-label [code]="phase.code" note="Revisión interna" />
+    <h2 class="phase-title">{{ review.heading }}</h2>
+  </header>
+
+  <div class="lines">
+    @for (line of review.lines; track line; let i = $index) {
+      <p class="lines__item" [appReveal]="80 + i * 120">{{ line }}</p>
+    }
+  </div>
+
+  <section class="scan" [class.is-running]="analysing()" [class.is-done]="resultReady()" appReveal="120">
+    <div class="scan__head">
+      <span class="field-key">{{ review.analysisLabel }}</span>
+      <span class="scan__pct">{{ progress() }}%</span>
+    </div>
+
+    <div class="scan__bar" role="progressbar" [attr.aria-valuenow]="progress()" aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="review.analysisLabel">
+      <span class="scan__fill" [style.width.%]="progress()"></span>
+      <span class="scan__beam" aria-hidden="true"></span>
+    </div>
+
+    <p class="scan__log" aria-live="polite">
+      <span class="scan__caret" aria-hidden="true">&gt;</span>
+      <span class="scan__line">{{ resultReady() ? 'Análisis completado.' : currentLog() }}</span>
+    </p>
+  </section>
+
+  @if (resultReady()) {
+    <div class="result" appReveal>
+      <span class="result__key">{{ review.resultLabel }}</span>
+
+      <p class="result__primary">
+        <span [appTypewriter]="review.resultPrimary" [speed]="52" [keepCaret]="false" (typed)="primaryTyped.set(true)"></span>
+      </p>
+
+      <p class="result__secondary">
+        <span [appTypewriter]="review.resultSecondary" [speed]="42" [play]="primaryTyped()" [startDelay]="480"></span>
+      </p>
+    </div>
+  }
+
+  <div class="status">
+    @for (line of review.statusLines; track line; let i = $index) {
+      <p class="status__line" [class.status__line--soft]="i > 0" [appReveal]="120 + i * 180">
+        {{ line }}
+      </p>
+    }
+  </div>
+</div>

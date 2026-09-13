@@ -1,0 +1,288 @@
+@use 'mixins' as *;
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+}
+
+.head__lead {
+  margin-top: 0.2rem;
+}
+
+.grid {
+  display: grid;
+  gap: clamp(1.6rem, 3.5vw, 2.75rem);
+  grid-template-columns: minmax(0, 1fr);
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    align-items: start;
+  }
+}
+
+// --- gráfico -----------------------------------------------------------------
+.chart {
+  @include panel;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  padding: clamp(1.15rem, 3vw, 2rem);
+  @include grid-paper(30px, 0.028);
+}
+
+.chart__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.chart__visual {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.6vw, 0.95rem);
+}
+
+// --- fila --------------------------------------------------------------------
+.row {
+  display: grid;
+  grid-template-columns: minmax(5.5rem, 8.5rem) minmax(0, 1fr) minmax(4.5rem, auto);
+  align-items: center;
+  column-gap: clamp(0.6rem, 1.6vw, 1rem);
+  row-gap: 0.4rem;
+
+  @include down(sm) {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    .row__label {
+      grid-column: 1;
+    }
+    .row__value {
+      grid-column: 2;
+      text-align: right;
+      align-items: flex-end;
+    }
+    .row__track {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+}
+
+.row__label {
+  @include label(0.62rem);
+  color: var(--text);
+  letter-spacing: 0.12em;
+  line-height: 1.35;
+}
+
+.row__track {
+  position: relative;
+  height: clamp(1.6rem, 3.4vw, 2.1rem);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  overflow: visible;
+}
+
+.row__bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--accent-deep) 88%, transparent),
+    var(--accent)
+  );
+  box-shadow: 0 0 26px -8px var(--accent);
+  transition: width 1100ms var(--ease-out);
+}
+
+.chart.is-live .row__bar {
+  width: var(--target, 0%);
+}
+
+.row.is-off .row__bar {
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent) 72%, #fff);
+  box-shadow:
+    0 0 34px -6px var(--accent),
+    0 0 0 1px color-mix(in oklab, #fff 35%, transparent);
+
+  @include motion {
+    animation: bloom 2.6s var(--ease-in-out) 1.6s infinite;
+  }
+}
+
+.row__value {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.row__num {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 0.88rem + 0.5vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.row.is-off .row__num {
+  color: var(--accent);
+  text-shadow: 0 0 24px color-mix(in oklab, var(--accent) 55%, transparent);
+}
+
+.row__note,
+.row__flag {
+  @include label(0.5rem);
+  color: var(--faint);
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+}
+
+.row__flag {
+  color: var(--accent);
+}
+
+// --- eje ---------------------------------------------------------------------
+.row--axis .row__track {
+  height: 1.15rem;
+  background: none;
+  box-shadow: none;
+}
+
+.tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tick__line {
+  width: 1px;
+  flex: 1;
+  background: var(--rule);
+}
+
+.tick__value {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 400;
+  color: var(--faint);
+  line-height: 1;
+  padding-top: 0.25rem;
+}
+
+.limit {
+  position: absolute;
+  top: 0;
+  bottom: -0.4rem;
+  border-left: 1px dashed color-mix(in oklab, var(--amber) 65%, transparent);
+}
+
+.limit__tag {
+  position: absolute;
+  right: calc(100% + 0.4rem);
+  top: -0.1rem;
+  @include label(0.48rem);
+  color: var(--amber);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+
+  @include down(md) {
+    display: none;
+  }
+}
+
+// La línea de seguridad cruza todas las barras, no sólo el eje.
+.row:not(.row--axis) .row__track::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: var(--limit, 90.909%);
+  border-left: 1px dashed color-mix(in oklab, var(--amber) 45%, transparent);
+  pointer-events: none;
+}
+
+// --- conclusiones ------------------------------------------------------------
+.findings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.findings__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.6rem);
+  font-weight: 400;
+  color: var(--text);
+}
+
+.findings__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.findings__item {
+  position: relative;
+  padding-left: 1.15rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+}
+
+.verdict-box {
+  @include panel;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+  padding: 1.1rem 1.25rem;
+  border-color: color-mix(in oklab, var(--amber) 32%, var(--rule));
+  background: color-mix(in oklab, var(--amber) 7%, var(--surface));
+}
+
+.verdict-box__warning {
+  display: flex;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.88rem, 0.8rem + 0.35vw, 1.02rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+.verdict-box__icon {
+  color: var(--amber);
+  flex: none;
+}
+
+.verdict-box__aside {
+  padding-left: 1.6rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1rem, 0.9rem + 0.6vw, 1.25rem);
+  color: var(--accent);
+}

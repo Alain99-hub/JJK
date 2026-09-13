@@ -1,0 +1,111 @@
+<div class="shell">
+  <header class="head" appReveal>
+    <app-phase-label [code]="phase.code" note="Telemetría" />
+    <h2 class="phase-title">{{ phase.title }}</h2>
+    <p class="doc-text head__lead">{{ report.intro }}</p>
+  </header>
+
+  <div class="grid">
+    <figure
+      class="chart"
+      [class.is-live]="visible()"
+      [style.--limit]="limitOffset + '%'"
+      appReveal="60"
+    >
+      <div class="chart__head">
+        <span class="field-key">Evento</span>
+        <span class="field-key">Nivel de daño (sobre {{ safetyLimit }})</span>
+      </div>
+
+      <div class="chart__visual" aria-hidden="true">
+        <div class="row row--axis">
+          <span class="row__label"></span>
+          <span class="row__track row__track--axis">
+            @for (tick of ticks; track tick.value) {
+              <span class="tick" [style.left.%]="tick.offset">
+                <i class="tick__line"></i>
+                <b class="tick__value">{{ tick.value }}</b>
+              </span>
+            }
+            <span class="limit" [style.left.%]="limitOffset">
+              <span class="limit__tag">Límite de seguridad</span>
+            </span>
+          </span>
+          <span class="row__value"></span>
+        </div>
+
+        @for (event of events; track event.label; let i = $index) {
+          <div class="row" [class.is-off]="event.offScale">
+            <span class="row__label">{{ event.label }}</span>
+
+            <span class="row__track">
+              <span
+                class="row__bar"
+                [style.--target]="barWidth(event)"
+                [style.transition-delay.ms]="160 + i * 130"
+              ></span>
+            </span>
+
+            <span class="row__value">
+              <span
+                class="row__num"
+                [appCountUp]="event.value"
+                [startDelay]="160 + i * 130"
+              ></span>
+              @if (event.offScale) {
+                <span class="row__flag">Fuera de escala</span>
+              } @else {
+                <span class="row__note">{{ event.note }}</span>
+              }
+            </span>
+          </div>
+        }
+      </div>
+
+      <figcaption class="sr-only">
+        <table>
+          <caption>
+            Registro de daño emocional por evento, en una escala de 0 a
+            {{ safetyLimit }}.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Evento</th>
+              <th scope="col">Nivel de daño</th>
+              <th scope="col">Observación</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of events; track event.label) {
+              <tr>
+                <th scope="row">{{ event.label }}</th>
+                <td>{{ event.value }}</td>
+                <td>{{ event.note }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </figcaption>
+    </figure>
+
+    <aside class="findings" aria-labelledby="findings-title">
+      <h3 class="findings__title" id="findings-title" appReveal="80">
+        {{ report.conclusionTitle }}
+      </h3>
+
+      <ul class="findings__list">
+        @for (line of report.conclusions; track line; let i = $index) {
+          <li class="findings__item" [appReveal]="120 + i * 110">{{ line }}</li>
+        }
+      </ul>
+
+      <div class="verdict-box" appReveal="180">
+        <p class="verdict-box__warning">
+          <span class="verdict-box__icon" aria-hidden="true">⚠</span>
+          {{ report.warning }}
+        </p>
+        <p class="verdict-box__aside">{{ report.aside }}</p>
+      </div>
+    </aside>
+  </div>
+</div>

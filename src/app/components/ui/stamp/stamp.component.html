@@ -1,0 +1,8 @@
+<div class="stamp" [class.is-stamped]="visible()" [attr.data-tone]="tone()">
+  <div class="stamp__frame">
+    <span class="stamp__label">{{ label() }}</span>
+    @if (sub(); as sub) {
+      <span class="stamp__sub">{{ sub }}</span>
+    }
+  </div>
+</div>

@@ -1,0 +1,211 @@
+@use 'mixins' as *;
+
+:host {
+  position: relative;
+}
+
+// Un halo cálido empieza a filtrarse: el informe deja de ser sólo un informe.
+:host::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    70% 55% at 50% 78%,
+    color-mix(in oklab, var(--rose) 10%, transparent),
+    transparent 70%
+  );
+  opacity: var(--warmth);
+  transition: opacity var(--dur-slow) var(--ease-in-out);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: clamp(1.6rem, 3.5vw, 2.5rem);
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: clamp(1.6rem, 3.5vw, 2.4rem);
+}
+
+.lines__item {
+  font-size: clamp(1rem, 0.92rem + 0.45vw, 1.14rem);
+  color: var(--text-muted);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+// --- análisis ----------------------------------------------------------------
+.scan {
+  @include panel;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.2rem 1.35rem;
+}
+
+.scan__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.scan__pct {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.scan__bar {
+  position: relative;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.scan__fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent));
+  transition: width 520ms var(--ease-out);
+}
+
+.scan__beam {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, #fff 45%, transparent),
+    transparent
+  );
+  opacity: 0;
+  translate: -100% 0;
+}
+
+.scan.is-running .scan__beam {
+  opacity: 0.7;
+
+  @include motion {
+    animation: beam 1.4s linear infinite;
+  }
+}
+
+@keyframes beam {
+  from {
+    translate: -100% 0;
+  }
+  to {
+    translate: 100% 0;
+  }
+}
+
+.scan__log {
+  display: flex;
+  gap: 0.55rem;
+  min-height: 1.6em;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.scan__caret {
+  color: var(--accent);
+  flex: none;
+}
+
+.scan__line {
+  animation: log-in 300ms var(--ease-out);
+}
+
+@keyframes log-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.scan.is-done .scan__line {
+  color: var(--accent);
+}
+
+// --- resultado ---------------------------------------------------------------
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: clamp(1.4rem, 3vw, 2.2rem);
+  padding: clamp(1.3rem, 3.2vw, 2rem);
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, var(--rule));
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  background: linear-gradient(
+    120deg,
+    color-mix(in oklab, var(--accent) 9%, var(--surface)),
+    var(--surface)
+  );
+  box-shadow: var(--shadow-panel);
+}
+
+.result__key {
+  @include label(0.6rem);
+  color: var(--accent);
+  letter-spacing: 0.3em;
+}
+
+.result__primary {
+  min-height: 1.4em;
+  font-family: var(--font-mono);
+  font-size: clamp(1.15rem, 0.95rem + 1vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.result__secondary {
+  min-height: 1.3em;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.05rem + 2.2vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-shadow: 0 0 60px color-mix(in oklab, var(--accent) 28%, transparent);
+}
+
+// --- estado ------------------------------------------------------------------
+.status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: clamp(1.3rem, 3vw, 2rem);
+  padding-left: clamp(0rem, 4vw, 2.5rem);
+}
+
+.status__line {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1rem, 0.9rem + 0.6vw, 1.24rem);
+  color: var(--text-muted);
+}
+
+.status__line--soft {
+  color: var(--accent);
+  padding-left: clamp(0.8rem, 4vw, 2.6rem);
+}

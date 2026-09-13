@@ -1,0 +1,42 @@
+@if (experience.isMounted()) {
+  <app-classified-header />
+
+  <main class="dossier" id="expediente">
+    <header class="cover">
+      <div class="shell cover__inner">
+        <p class="cover__badge">
+          <span aria-hidden="true">⚠</span>
+          <span>{{ dossier.classification }}</span>
+        </p>
+
+        <h1 class="cover__title">{{ dossier.title }}</h1>
+
+        <p class="cover__dept">{{ department }}</p>
+
+        <p class="cover__tags">
+          Expediente clasificado como
+          @for (tag of dossier.tags; track tag; let last = $last) {
+            <b>{{ tag }}</b
+            >{{ last ? '' : ', ' }}
+          }
+        </p>
+
+        <p class="cover__hint" aria-hidden="true">
+          <span class="cover__hint-arrow"></span>
+          Desplázate para leer el informe
+        </p>
+      </div>
+    </header>
+
+    <app-threat-profile #phase />
+    <app-incident-timeline #phase />
+    <app-cursed-techniques #phase />
+    <app-emotional-damage #phase />
+    <app-domain-expansion #phase />
+    <app-final-verdict #phase />
+  </main>
+}
+
+@if (!experience.isOpen()) {
+  <app-intro />
+}

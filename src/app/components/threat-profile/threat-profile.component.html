@@ -1,0 +1,78 @@
+<div class="shell">
+  <header class="head" appReveal>
+    <app-phase-label [code]="phase.code" note="Ficha del sospechoso" />
+    <h2 class="phase-title">{{ phase.title }}</h2>
+  </header>
+
+  <div class="grid">
+    <figure class="photo" appReveal="80" revealShift="34px">
+      <div class="photo__frame">
+        <span class="photo__bracket photo__bracket--tl" aria-hidden="true"></span>
+        <span class="photo__bracket photo__bracket--tr" aria-hidden="true"></span>
+        <span class="photo__bracket photo__bracket--bl" aria-hidden="true"></span>
+        <span class="photo__bracket photo__bracket--br" aria-hidden="true"></span>
+
+        <svg class="photo__glyph" viewBox="0 0 120 140" aria-hidden="true" focusable="false">
+          <circle cx="60" cy="48" r="24" />
+          <path d="M18 132c0-23.2 18.8-42 42-42s42 18.8 42 42" />
+        </svg>
+
+        <span class="photo__band">{{ subject.photoNotice }}</span>
+        <span class="photo__scan" aria-hidden="true"></span>
+      </div>
+
+      <figcaption class="photo__caption">{{ subject.photoSubnotice }}</figcaption>
+    </figure>
+
+    <div class="file">
+      <dl class="fields">
+        <div class="field" appReveal="120">
+          <dt class="field-key">Nombre</dt>
+          <dd class="field-value field__name">
+            <app-redacted-text [text]="subject.name" [delay]="280" />
+            <span class="field__tag">{{ subject.classification }}</span>
+          </dd>
+        </div>
+
+        <div class="field" appReveal="200">
+          <dt class="field-key">Habilidad maldita</dt>
+          <dd class="field-value">{{ subject.ability }}</dd>
+        </div>
+      </dl>
+
+      <div class="danger" [class.is-live]="visible()" appReveal="280">
+        <div class="danger__head">
+          <span class="field-key">Nivel de peligro</span>
+          <span class="danger__pct"><span [appCountUp]="subject.dangerValue" suffix="%"></span></span>
+        </div>
+
+        <div
+          class="danger__meter"
+          role="img"
+          [attr.aria-label]="
+            'Nivel de peligro: ' + subject.dangerLabel + ', ' + subject.dangerValue + ' por ciento'
+          "
+        >
+          @for (segment of segments; track segment) {
+            <span class="danger__seg" [style.transition-delay.ms]="segment * 70"></span>
+          }
+        </div>
+
+        <p class="danger__label">{{ subject.dangerLabel }}</p>
+        <p class="danger__warn">
+          <span class="danger__warn-icon" aria-hidden="true">⚠</span>
+          {{ subject.dangerWarning }}
+        </p>
+      </div>
+
+      <ul class="meta" appReveal="340">
+        @for (item of subject.fields; track item.key) {
+          <li class="meta__item">
+            <span class="field-key">{{ item.key }}</span>
+            <span class="meta__value">{{ item.value }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>

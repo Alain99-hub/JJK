@@ -1,0 +1,285 @@
+@use 'mixins' as *;
+
+:host {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding-block: clamp(6rem, 16vh, 11rem);
+  text-align: center;
+}
+
+// --- fondo cálido ------------------------------------------------------------
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.backdrop__art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+  opacity: 0.09;
+  filter: saturate(0.4) brightness(1.1);
+  transition: opacity 1600ms var(--ease-in-out);
+
+  // Se aparta del centro para no competir con la frase.
+  mask-image: radial-gradient(
+    58% 46% at 50% 48%,
+    transparent 30%,
+    #000 100%
+  );
+}
+
+:host([data-step='4']) .backdrop__art,
+:host([data-step='5']) .backdrop__art {
+  opacity: 0.16;
+}
+
+.backdrop__bloom {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      62% 48% at 50% 46%,
+      color-mix(in oklab, var(--gold) 16%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      90% 70% at 50% 108%,
+      color-mix(in oklab, var(--rose) 20%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(180deg, transparent, color-mix(in oklab, #1a0d14 70%, transparent));
+  opacity: 0;
+  transition: opacity 2200ms var(--ease-in-out);
+}
+
+:host([data-step='3']) .backdrop__bloom {
+  opacity: 0.6;
+}
+
+:host([data-step='4']) .backdrop__bloom,
+:host([data-step='5']) .backdrop__bloom {
+  opacity: 1;
+}
+
+// --- contenido ---------------------------------------------------------------
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.1rem, 2.6vw, 1.8rem);
+}
+
+.eyebrow,
+.heading,
+.beat,
+.closing {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 900ms var(--ease-out),
+    transform 900ms var(--ease-out),
+    filter 900ms var(--ease-out);
+  filter: blur(6px);
+}
+
+.is-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.eyebrow {
+  @include label(0.62rem);
+  color: var(--gold);
+  letter-spacing: 0.4em;
+  padding: 0.4rem 1.1rem;
+  border: 1px solid color-mix(in oklab, var(--gold) 34%, transparent);
+  border-radius: 99px;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2rem, 1.3rem + 3.4vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--cream);
+}
+
+.beats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 2.6vw, 1.8rem);
+  margin-top: clamp(1rem, 3vw, 2.2rem);
+  max-width: 30ch;
+}
+
+.beat {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.05rem, 0.92rem + 0.85vw, 1.45rem);
+  line-height: 1.45;
+  color: color-mix(in oklab, var(--cream) 72%, transparent);
+  text-wrap: balance;
+}
+
+// --- la frase ----------------------------------------------------------------
+.climax {
+  position: relative;
+  margin-top: clamp(0.6rem, 2vw, 1.4rem);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 1.1rem + 5.6vw, 4.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+
+  background: linear-gradient(
+    104deg,
+    var(--cream) 6%,
+    var(--gold) 38%,
+    var(--rose) 68%,
+    var(--cream) 96%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  // Llega desenfocada y se asienta: es la frase que sostiene toda la página.
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  filter: blur(16px);
+  transition:
+    opacity 1500ms var(--ease-out),
+    transform 1500ms var(--ease-out),
+    filter 1500ms var(--ease-out);
+}
+
+.climax.is-in {
+  opacity: 1;
+  transform: none;
+  filter: drop-shadow(0 0 46px color-mix(in oklab, var(--gold) 26%, transparent));
+
+  @include motion {
+    animation: climax-sheen 9s var(--ease-in-out) 1600ms infinite;
+  }
+}
+
+@keyframes climax-sheen {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+// --- cierre ------------------------------------------------------------------
+.closing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 2.4vw, 1.5rem);
+  margin-top: clamp(2.5rem, 7vw, 5rem);
+  padding-top: clamp(2rem, 5vw, 3.2rem);
+  border-top: 1px solid color-mix(in oklab, var(--gold) 22%, transparent);
+  width: 100%;
+}
+
+.closing__lead {
+  @include label(0.6rem);
+  color: color-mix(in oklab, var(--cream) 62%, transparent);
+  letter-spacing: 0.18em;
+  line-height: 2;
+  text-transform: none;
+  max-width: 36ch;
+}
+
+.closing__stamp {
+  margin-block: clamp(0.4rem, 1.6vw, 1rem);
+}
+
+.closing__heart {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.closing__heart-icon {
+  font-size: clamp(1.1rem, 0.95rem + 0.8vw, 1.5rem);
+  color: var(--rose);
+  filter: drop-shadow(0 0 18px color-mix(in oklab, var(--rose) 60%, transparent));
+
+  @include motion {
+    animation: bloom 3.4s var(--ease-in-out) infinite;
+  }
+}
+
+.closing__seal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+
+.closing__sealed {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1rem + 0.8vw, 1.5rem);
+  color: var(--cream);
+}
+
+.closing__meta {
+  @include label(0.52rem);
+  color: color-mix(in oklab, var(--cream) 40%, transparent);
+  letter-spacing: 0.22em;
+}
+
+// --- reiniciar ---------------------------------------------------------------
+.restart {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: clamp(0.8rem, 2.4vw, 1.6rem);
+  min-height: 48px;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid color-mix(in oklab, var(--gold) 40%, transparent);
+  border-radius: 99px;
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  background: color-mix(in oklab, var(--gold) 8%, transparent);
+  transition:
+    background var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    color: var(--gold);
+  }
+
+  @include hoverable {
+    &:hover {
+      background: color-mix(in oklab, var(--gold) 18%, transparent);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

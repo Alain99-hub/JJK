@@ -1,0 +1,76 @@
+<div class="art" aria-hidden="true">
+  <img class="art__img" src="art/intro.jpg" alt="" decoding="async" fetchpriority="high" />
+</div>
+<div class="veil" aria-hidden="true"></div>
+<div class="sweep" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<div class="inner">
+  <p class="badge">
+    <span class="badge__icon" aria-hidden="true">⚠</span>
+    <span>{{ dossier.classification }}</span>
+  </p>
+
+  <p class="dept" [appTypewriter]="department" [speed]="16" [sonify]="true"></p>
+
+  <h1 class="title">{{ dossier.lockLine }}</h1>
+
+  <ul class="tags">
+    @for (tag of dossier.tags; track tag) {
+      <li class="tags__item">{{ tag }}</li>
+    }
+  </ul>
+
+  <button
+    type="button"
+    class="cta"
+    [disabled]="phase() !== 'idle'"
+    (click)="open()"
+    aria-describedby="intro-note"
+  >
+    <svg class="cta__lock" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M7 10V7a5 5 0 0 1 10 0v3"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      />
+      <rect
+        x="4.5"
+        y="10"
+        width="15"
+        height="10.5"
+        rx="2"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+      />
+      <circle cx="12" cy="15.2" r="1.5" fill="currentColor" />
+    </svg>
+    <span>{{ dossier.openAction }}</span>
+  </button>
+
+  <p class="note" id="intro-note">{{ dossier.accessNote }}</p>
+  <p class="file-id">{{ dossier.id }}</p>
+</div>
+
+@if (phase() !== 'idle') {
+  <div class="boot" role="status" aria-live="polite">
+    <ul class="boot__log">
+      @for (line of bootLog; track line; let i = $index) {
+        @if (i < visibleLines()) {
+          <li class="boot__line">
+            <span class="boot__caret" aria-hidden="true">&gt;</span>{{ line }}
+          </li>
+        }
+      }
+    </ul>
+
+    <div class="boot__bar">
+      <span class="boot__fill" [style.width.%]="progress()"></span>
+    </div>
+  </div>
+}
+
+<div class="flash" aria-hidden="true"></div>

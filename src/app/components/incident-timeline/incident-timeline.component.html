@@ -1,0 +1,61 @@
+<div class="shell">
+  <header class="head" appReveal>
+    <app-phase-label [code]="phase.code" note="Registro cronológico" />
+    <h2 class="phase-title">{{ phase.title }}</h2>
+  </header>
+
+  <div class="grid">
+    <figure class="site" appReveal="60" revealShift="34px">
+      <div class="site__frame">
+        <img class="site__img" src="art/temple.jpg" alt="" loading="lazy" decoding="async" />
+        <span class="site__scan" aria-hidden="true"></span>
+        <span class="site__pin" aria-hidden="true"></span>
+      </div>
+      <figcaption class="site__caption">
+        <span class="field-key">Ubicación del incidente</span>
+        <span class="site__name">{{ incident.location }}</span>
+        <span class="site__note">Sitio conocido por los ancestros</span>
+      </figcaption>
+    </figure>
+
+    <div class="log">
+      <blockquote class="prologue" appReveal="100">{{ incident.prologue }}</blockquote>
+
+      <p class="diagnosis" appReveal="140">{{ incident.diagnosis }}</p>
+
+      <section class="symptoms" aria-labelledby="symptoms-title">
+        <h3 class="field-key" id="symptoms-title" appReveal="160">
+          {{ incident.symptomsTitle }}
+        </h3>
+
+        <ol class="timeline">
+          @for (symptom of symptoms; track symptom.label; let i = $index) {
+            <li class="timeline__item" [appReveal]="180 + i * 90" revealShift="14px">
+              <span class="timeline__node" aria-hidden="true"></span>
+              <span class="timeline__label">{{ symptom.label }}</span>
+              <span
+                class="timeline__status"
+                [class.is-critical]="symptom.status === 'Crítico'"
+                >{{ symptom.status }}</span
+              >
+            </li>
+          }
+        </ol>
+      </section>
+
+      <div class="containment" appReveal="140">
+        <p class="containment__attempt">{{ incident.containment.attempt }}</p>
+
+        <p class="containment__result">
+          <span class="field-key">{{ incident.containment.resultLabel }}</span>
+          <span class="glitch" [attr.data-text]="incident.containment.result" aria-hidden="true">{{
+            incident.containment.result
+          }}</span>
+          <span class="sr-only">{{ incident.containment.result }}</span>
+        </p>
+
+        <p class="containment__foot">{{ incident.containment.footnote }}</p>
+      </div>
+    </div>
+  </div>
+</div>

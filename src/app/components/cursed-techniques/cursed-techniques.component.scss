@@ -1,0 +1,287 @@
+@use 'mixins' as *;
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+}
+
+.head__lead {
+  margin-top: 0.2rem;
+}
+
+// --- tarjetas 01-03 ----------------------------------------------------------
+.cards {
+  display: grid;
+  gap: clamp(0.9rem, 2vw, 1.35rem);
+  grid-template-columns: minmax(0, 1fr);
+
+  @include up(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include up(lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.card {
+  --mx: 50%;
+  --my: 50%;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+
+  @include panel;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: clamp(1.2rem, 2.4vw, 1.65rem);
+  overflow: hidden;
+  transform: perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transform-style: preserve-3d;
+  transition:
+    transform 220ms var(--ease-out),
+    border-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out);
+}
+
+.card__glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(
+    380px circle at var(--mx) var(--my),
+    color-mix(in oklab, var(--accent) 18%, transparent),
+    transparent 62%
+  );
+  transition: opacity var(--dur) var(--ease-out);
+  pointer-events: none;
+}
+
+@include hoverable {
+  .card:hover {
+    border-color: color-mix(in oklab, var(--accent) 45%, var(--rule));
+    box-shadow: var(--shadow-panel), 0 26px 60px -38px var(--accent);
+  }
+
+  .card:hover .card__glow {
+    opacity: 1;
+  }
+
+  .card:hover .card__icon {
+    color: var(--accent);
+    border-color: color-mix(in oklab, var(--accent) 55%, transparent);
+    transform: translateY(-2px);
+  }
+}
+
+.card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.card__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  color: var(--text-muted);
+  background: color-mix(in oklab, var(--surface-high) 70%, transparent);
+  transition:
+    color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out),
+    transform var(--dur) var(--ease-out);
+
+  svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+}
+
+.card__code {
+  font-family: var(--font-mono);
+  font-size: clamp(1.8rem, 1.4rem + 1.6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--rule-strong);
+  letter-spacing: 0.02em;
+}
+
+.card__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1rem + 0.8vw, 1.42rem);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.card__desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.62;
+  flex: 1;
+}
+
+.card__grade {
+  @include label(0.55rem);
+  color: var(--faint);
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+
+// --- técnica definitiva ------------------------------------------------------
+.ultimate {
+  position: relative;
+  margin-top: clamp(0.9rem, 2vw, 1.35rem);
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid color-mix(in oklab, var(--accent) 28%, var(--rule));
+  border-radius: var(--radius-lg);
+  background: radial-gradient(120% 130% at 78% 12%, #150a12, var(--ink) 62%);
+  min-height: clamp(21rem, 46vw, 27rem);
+  display: grid;
+  align-items: end;
+  transition: border-color var(--dur-slow) var(--ease-out);
+}
+
+.ultimate__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 72% 32%;
+  opacity: 0.16;
+  filter: invert(1) contrast(1.15) saturate(0);
+  transition: opacity 900ms var(--ease-out), transform 1400ms var(--ease-out);
+  z-index: -2;
+}
+
+.ultimate__veil {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+      100deg,
+      var(--ink) 8%,
+      color-mix(in oklab, var(--ink) 72%, transparent) 52%,
+      transparent 100%
+    ),
+    linear-gradient(0deg, var(--ink) 2%, transparent 55%);
+}
+
+// Anillos de expansión: laten siempre, se encienden al acercarse.
+.ultimate__rings {
+  position: absolute;
+  right: 12%;
+  top: 32%;
+  width: min(24rem, 46vw);
+  aspect-ratio: 1;
+  z-index: -1;
+  opacity: 0.4;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+
+.ultimate__ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid color-mix(in oklab, var(--accent) 55%, transparent);
+  border-radius: 50%;
+  opacity: 0;
+
+  @include motion {
+    animation: ring-out 3.6s var(--ease-out) infinite;
+  }
+}
+
+.ultimate__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: clamp(1.4rem, 4vw, 3rem);
+  max-width: 40rem;
+}
+
+.ultimate__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+}
+
+.ultimate__code {
+  @include label(0.6rem);
+  color: var(--accent);
+}
+
+.ultimate__grade {
+  @include label(0.55rem);
+  color: var(--text);
+  padding: 0.22rem 0.6rem;
+  border: 1px solid color-mix(in oklab, var(--accent) 50%, transparent);
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--accent) 14%, transparent);
+}
+
+.ultimate__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1.2rem + 3.4vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+
+.ultimate__alias {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 0.95rem + 0.9vw, 1.55rem);
+  color: var(--accent);
+  text-shadow: 0 0 40px color-mix(in oklab, var(--accent) 35%, transparent);
+}
+
+.ultimate__desc {
+  font-size: 0.98rem;
+  color: var(--text-muted);
+  max-width: 34ch;
+}
+
+.ultimate__note {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 0.4rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--rule);
+  @include label(0.58rem);
+  color: var(--faint);
+  text-transform: none;
+  letter-spacing: 0.08em;
+}
+
+@include hoverable {
+  .ultimate:hover {
+    border-color: color-mix(in oklab, var(--accent) 60%, transparent);
+  }
+
+  .ultimate:hover .ultimate__art {
+    opacity: 0.34;
+    transform: scale(1.05);
+  }
+
+  .ultimate:hover .ultimate__rings {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,280 @@
+@use 'mixins' as *;
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(1.6rem, 3.5vw, 3rem);
+  grid-template-columns: minmax(0, 1fr);
+
+  @include up(md) {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+  }
+}
+
+// --- lugar del incidente -----------------------------------------------------
+.site {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+
+  @include up(md) {
+    position: sticky;
+    top: 90px;
+  }
+}
+
+.site__frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--ink);
+}
+
+.site__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 35%;
+  opacity: 0.72;
+  filter: saturate(0.85) contrast(1.08);
+  transition: transform 1200ms var(--ease-out), opacity var(--dur-slow) ease;
+}
+
+@include hoverable {
+  .site:hover .site__img {
+    transform: scale(1.04);
+    opacity: 0.88;
+  }
+}
+
+.site__scan {
+  position: absolute;
+  inset: 0;
+  @include scanlines(0.26, 4px);
+  background-blend-mode: multiply;
+  box-shadow: inset 0 0 90px 20px rgba(5, 6, 10, 0.9);
+}
+
+.site__pin {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 14px;
+  height: 14px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: color-mix(in oklab, var(--accent) 30%, transparent);
+
+  @include motion {
+    animation: pulse-dot 2.6s var(--ease-in-out) infinite;
+  }
+}
+
+.site__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.site__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 1.9rem);
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.site__note {
+  @include label(0.58rem);
+  color: var(--faint);
+  text-transform: none;
+  letter-spacing: 0.1em;
+}
+
+// --- relato ------------------------------------------------------------------
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.prologue {
+  position: relative;
+  padding: 0.2rem 0 0.2rem 1.35rem;
+  border-left: 2px solid var(--accent);
+  font-family: var(--font-display);
+  font-size: clamp(1.08rem, 0.95rem + 0.85vw, 1.5rem);
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.diagnosis {
+  @include label(0.66rem);
+  color: var(--accent);
+  letter-spacing: 0.24em;
+}
+
+// --- síntomas ----------------------------------------------------------------
+.symptoms {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-left: 1.5rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 0.85rem;
+    bottom: 0.85rem;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      var(--rule-strong) 12%,
+      var(--rule-strong) 88%,
+      transparent
+    );
+  }
+}
+
+.timeline__item {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--surface) 72%, transparent);
+  transition: border-color var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
+}
+
+@include hoverable {
+  .timeline__item:hover {
+    border-color: color-mix(in oklab, var(--accent) 40%, var(--rule));
+    background: var(--surface-high);
+  }
+}
+
+.timeline__node {
+  position: absolute;
+  left: calc(-1.5rem + 1px);
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  translate: 0 -50%;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--page-bg);
+}
+
+.timeline__label {
+  flex: 1 1 12rem;
+  min-width: 0;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.timeline__status {
+  @include label(0.55rem);
+  color: var(--faint);
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  white-space: nowrap;
+
+  &.is-critical {
+    color: var(--accent);
+    border-color: color-mix(in oklab, var(--accent) 50%, transparent);
+    background: color-mix(in oklab, var(--accent) 12%, transparent);
+  }
+}
+
+// --- protocolo de contención -------------------------------------------------
+.containment {
+  @include panel;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.25rem 1.35rem;
+}
+
+.containment__attempt {
+  font-size: 0.98rem;
+  color: var(--text);
+}
+
+.containment__result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--rule);
+}
+
+.containment__foot {
+  font-size: 0.85rem;
+  color: var(--faint);
+  font-style: italic;
+}
+
+// --- «FALLIDO» con glitch ----------------------------------------------------
+.glitch {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: clamp(1.3rem, 1rem + 1.5vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--red-hot);
+  text-shadow: 0 0 26px color-mix(in oklab, var(--red-hot) 45%, transparent);
+
+  @include motion {
+    animation: glitch-shift 4.5s steps(1) infinite;
+  }
+
+  &::before,
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  &::before {
+    color: #35e7ff;
+    @include motion {
+      animation: glitch-shift 4.5s steps(1) infinite reverse;
+    }
+  }
+
+  &::after {
+    color: #ff2f6d;
+    @include motion {
+      animation: glitch-shift 3.7s steps(1) infinite;
+    }
+  }
+}

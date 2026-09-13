@@ -1,0 +1,94 @@
+// =============================================================================
+//  TOKENS — Expediente Técnico de Sentimientos No Controlados
+//  Única fuente de verdad para color, tipografía, ritmo y sombras.
+// =============================================================================
+
+// `--warmth` es la temperatura narrativa del expediente: 0 = informe frío,
+// 1 = confesión. Se registra como <number> para poder interpolarla y animarla.
+@property --warmth {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+:root {
+  color-scheme: dark;
+
+  --warmth: 0;
+
+  // --- superficies ---------------------------------------------------------
+  --ink: #05060a;
+  --ink-soft: #080a12;
+  --panel: #0b0e17;
+  --panel-high: #11151f;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.18);
+
+  // --- texto ---------------------------------------------------------------
+  --fg: #e9eaf1;
+  --muted: #8a90a6;
+  --faint: #5a6076;
+
+  // --- acentos fríos (fases 1-4) -------------------------------------------
+  --red: #c8102e;
+  --red-hot: #ff4256;
+  --amber: #e8b04b;
+
+  // --- acentos cálidos (giro final) ----------------------------------------
+  --gold: #e9c27c;
+  --rose: #e8788f;
+  --cream: #fff3e6;
+
+  // --- derivados: se interpolan solos según --warmth ------------------------
+  --accent: color-mix(in oklab, var(--gold) calc(var(--warmth) * 100%), var(--red-hot));
+  --accent-deep: color-mix(in oklab, var(--rose) calc(var(--warmth) * 100%), var(--red));
+  --page-bg: color-mix(in oklab, #100a0f calc(var(--warmth) * 100%), var(--ink));
+  --surface: color-mix(in oklab, #191019 calc(var(--warmth) * 100%), var(--panel));
+  --surface-high: color-mix(in oklab, #211523 calc(var(--warmth) * 100%), var(--panel-high));
+  --text: color-mix(in oklab, var(--cream) calc(var(--warmth) * 70%), var(--fg));
+  --text-muted: color-mix(in oklab, #c7a894 calc(var(--warmth) * 70%), var(--muted));
+  --rule: color-mix(in oklab, rgba(255, 224, 200, 0.22) calc(var(--warmth) * 100%), var(--line));
+  --rule-strong: color-mix(
+    in oklab,
+    rgba(255, 224, 200, 0.38) calc(var(--warmth) * 100%),
+    var(--line-strong)
+  );
+
+  // --- tipografía ----------------------------------------------------------
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+  --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  // --- ritmo ---------------------------------------------------------------
+  --gutter: clamp(1.15rem, 4.5vw, 3.25rem);
+  --shell: 1180px;
+  --shell-narrow: 860px;
+  --section-y: clamp(4.5rem, 11vh, 8.5rem);
+
+  --radius-sm: 4px;
+  --radius: 10px;
+  --radius-lg: 18px;
+
+  // --- sombras / luces -----------------------------------------------------
+  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 22px 60px -32px rgba(0, 0, 0, 0.9);
+  --glow-accent: 0 0 0 1px color-mix(in oklab, var(--accent) 35%, transparent),
+    0 18px 60px -28px color-mix(in oklab, var(--accent) 70%, transparent);
+
+  // --- tiempos -------------------------------------------------------------
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur: 420ms;
+  --dur-slow: 900ms;
+}
+
+html {
+  // La temperatura viaja suave entre fases en vez de saltar de golpe.
+  transition: --warmth 1100ms var(--ease-in-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
+}

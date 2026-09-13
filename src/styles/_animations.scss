@@ -1,0 +1,173 @@
+// =============================================================================
+//  ANIMACIONES GLOBALES
+//  Keyframes compartidos + el contrato de la directiva appReveal.
+// =============================================================================
+
+@keyframes blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+  70% {
+    opacity: 0.65;
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+
+@keyframes sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-3%, 2%);
+  }
+  40% {
+    transform: translate(2%, -3%);
+  }
+  60% {
+    transform: translate(-2%, -2%);
+  }
+  80% {
+    transform: translate(3%, 1%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes glitch-shift {
+  0%,
+  92%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    clip-path: none;
+  }
+  93% {
+    transform: translate3d(-2px, 1px, 0);
+    clip-path: inset(12% 0 55% 0);
+  }
+  95% {
+    transform: translate3d(3px, -1px, 0);
+    clip-path: inset(58% 0 18% 0);
+  }
+  97% {
+    transform: translate3d(-1px, 0, 0);
+    clip-path: inset(32% 0 40% 0);
+  }
+}
+
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ring-out {
+  from {
+    transform: scale(0.35);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@keyframes stamp-in {
+  0% {
+    transform: rotate(-16deg) scale(2.4);
+    opacity: 0;
+    filter: blur(10px);
+  }
+  60% {
+    opacity: 1;
+  }
+  78% {
+    transform: rotate(-7deg) scale(0.96);
+    filter: blur(0);
+  }
+  100% {
+    transform: rotate(-6deg) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes bloom {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//  Contrato de `appReveal`: la directiva añade `.reveal` al inicializar y
+//  `.reveal--in` cuando el elemento entra en el viewport.
+// -----------------------------------------------------------------------------
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-shift, 22px), 0);
+  transition:
+    opacity 760ms var(--ease-out) var(--reveal-delay, 0ms),
+    transform 760ms var(--ease-out) var(--reveal-delay, 0ms),
+    filter 760ms var(--ease-out) var(--reveal-delay, 0ms);
+  filter: blur(var(--reveal-blur, 4px));
+  will-change: opacity, transform;
+}
+
+.reveal--in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal--in {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

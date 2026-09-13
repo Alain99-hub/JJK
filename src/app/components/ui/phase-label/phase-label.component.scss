@@ -1,0 +1,45 @@
+@use 'mixins' as *;
+
+:host {
+  display: inline-block;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.42rem 0.85rem 0.42rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--surface-high) 80%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.chip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+
+  @include motion {
+    animation: pulse-dot 2.4s var(--ease-in-out) infinite;
+  }
+}
+
+.chip__code {
+  @include label(0.66rem);
+  color: var(--text);
+  letter-spacing: 0.26em;
+}
+
+.chip__note {
+  @include label(0.6rem);
+  color: var(--faint);
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--rule);
+
+  @include down(sm) {
+    display: none;
+  }
+}

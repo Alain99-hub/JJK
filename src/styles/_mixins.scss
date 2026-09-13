@@ -1,0 +1,101 @@
+@use 'sass:map';
+
+// =============================================================================
+//  MIXINS — sin salida CSS propia, seguros de importar en cualquier componente.
+// =============================================================================
+
+$breakpoints: (
+  xs: 420px,
+  sm: 560px,
+  md: 760px,
+  lg: 1024px,
+  xl: 1280px,
+);
+
+@mixin up($key) {
+  @media (min-width: map.get($breakpoints, $key)) {
+    @content;
+  }
+}
+
+@mixin down($key) {
+  @media (max-width: (map.get($breakpoints, $key) - 0.02px)) {
+    @content;
+  }
+}
+
+/// Anima sólo si el usuario no pidió reducir movimiento.
+@mixin motion {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+/// Sólo en dispositivos con puntero fino capaz de hover real.
+@mixin hoverable {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+/// Contenedor centrado con los márgenes laterales del expediente.
+@mixin shell($max: var(--shell)) {
+  width: 100%;
+  max-width: $max;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/// Etiqueta técnica monoespaciada (códigos, campos, metadatos).
+@mixin label($size: 0.7rem) {
+  font-family: var(--font-mono);
+  font-size: $size;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/// Panel de documento clasificado.
+@mixin panel {
+  position: relative;
+  background: linear-gradient(
+    165deg,
+    color-mix(in oklab, var(--surface-high) 70%, transparent),
+    var(--surface)
+  );
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-panel);
+}
+
+/// Retícula de papel milimétrico muy tenue, para fondos de panel.
+@mixin grid-paper($size: 26px, $alpha: 0.035) {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, $alpha) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, $alpha) 1px, transparent 1px);
+  background-size: $size $size;
+}
+
+/// Líneas de barrido tipo monitor CRT.
+@mixin scanlines($alpha: 0.16, $gap: 3px) {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, $alpha) 0 1px,
+    transparent 1px $gap
+  );
+}
+
+@mixin focus-ring {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/// Recorta a N líneas.
+@mixin clamp-lines($n) {
+  display: -webkit-box;
+  -webkit-line-clamp: $n;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
