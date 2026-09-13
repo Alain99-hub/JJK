@@ -183,6 +183,39 @@ export const CLOSING = {
   restart: 'Volver a investigar',
 } as const;
 
+// --- Tarjeta de cumpleaños (pantalla principal) -------------------------------
+
+export const BIRTHDAY = {
+  envelopeNote: 'Tienes correspondencia',
+  to: 'Para',
+  name: 'Astrid',
+  frontLine: 'Abrir con cuidado: contiene cariño en exceso.',
+  openAction: 'Abrir tarjeta',
+  eyebrow: 'Hoy es tu día',
+  greeting: '¡Feliz cumpleaños,',
+  message: [
+    'Hoy el mundo celebra que existes, y yo lo celebro un poquito más fuerte que todos.',
+    'Gracias por cada sonrisa, por los audios a deshoras y por convertir días normales en mis favoritos.',
+    'Ojalá este nuevo año te trate tan bonito como tú haces sentir a quienes tenemos la suerte de estar cerca de ti.',
+  ],
+  wish: 'Que se cumpla todo lo que pidas al soplar las velas.',
+  signOff: 'Con todo mi cariño,',
+  signature: 'quien más te quiere',
+  postscript: 'P.D. Esta tarjeta guarda un secreto. Dicen que el sello solo se rompe si insistes…',
+  sealAlmost: 'Casi… una vez más.',
+  sealLabel: 'Sello misterioso',
+} as const;
+
+// --- Secreto de la tarjeta ---------------------------------------------------
+
+export const DOMAIN_OPENING = {
+  kanji: '領域展開',
+  title: 'Expansión de dominio',
+  techniqueLabel: 'Técnica',
+  technique: 'Hacerme extrañarte',
+  note: 'Abriendo el expediente clasificado…',
+} as const;
+
 // --- Secuencia de apertura ---------------------------------------------------
 
 export const BOOT_LOG: readonly string[] = [

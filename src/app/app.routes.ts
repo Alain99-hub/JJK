@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    title: 'Expediente clasificado — Departamento Técnico de Sentimientos No Controlados',
+    title: 'Para Astrid ♥',
     loadComponent: () =>
       import('./pages/expediente/expediente.component').then((m) => m.ExpedienteComponent),
   },

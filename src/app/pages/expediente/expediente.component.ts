@@ -9,9 +9,11 @@ import {
   viewChildren,
 } from '@angular/core';
 
+import { BirthdayCardComponent } from '../../components/birthday-card/birthday-card.component';
 import { ClassifiedHeaderComponent } from '../../components/classified-header/classified-header.component';
 import { CursedTechniquesComponent } from '../../components/cursed-techniques/cursed-techniques.component';
 import { DomainExpansionComponent } from '../../components/domain-expansion/domain-expansion.component';
+import { DomainOpeningComponent } from '../../components/domain-opening/domain-opening.component';
 import { EmotionalDamageComponent } from '../../components/emotional-damage/emotional-damage.component';
 import { FinalVerdictComponent } from '../../components/final-verdict/final-verdict.component';
 import { IncidentTimelineComponent } from '../../components/incident-timeline/incident-timeline.component';
@@ -31,6 +33,8 @@ import { DEPARTMENT, DOSSIER, PHASES } from '../../data/dossier.data';
   selector: 'app-expediente',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    BirthdayCardComponent,
+    DomainOpeningComponent,
     IntroComponent,
     ClassifiedHeaderComponent,
     ThreatProfileComponent,

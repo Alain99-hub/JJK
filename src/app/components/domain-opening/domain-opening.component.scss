@@ -1,0 +1,204 @@
+@use 'mixins' as *;
+
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--ink);
+  text-align: center;
+  transition: opacity 900ms var(--ease-in-out);
+}
+
+:host(.is-leaving) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+// --- fondo -------------------------------------------------------------------
+.art {
+  position: absolute;
+  inset: 0;
+}
+
+.art__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+  opacity: 0;
+  transform: scale(1.2);
+  filter: contrast(1.1);
+  transition:
+    opacity 1800ms var(--ease-out),
+    transform 7s var(--ease-out);
+}
+
+:host(.at-1) .art__img {
+  opacity: 0.55;
+  transform: scale(1);
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 50% at 50% 50%, rgba(5, 6, 10, 0.74), transparent 76%),
+    radial-gradient(130% 90% at 50% 50%, transparent 40%, var(--ink) 100%);
+}
+
+.rings {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(78vmin, 620px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  opacity: 0;
+  transition: opacity 1200ms ease;
+
+  span {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid color-mix(in oklab, var(--gold) 45%, transparent);
+    box-shadow: inset 0 0 40px -10px color-mix(in oklab, var(--gold) 60%, transparent);
+    opacity: 0;
+
+    @include motion {
+      animation: ring-out 3.2s var(--ease-out) infinite;
+    }
+
+    &:nth-child(2) {
+      animation-delay: 1.05s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 2.1s;
+    }
+  }
+}
+
+:host(.at-1) .rings {
+  opacity: 1;
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    50% 40% at 50% 50%,
+    color-mix(in oklab, var(--cream) 55%, transparent),
+    transparent 70%
+  );
+}
+
+:host(.at-3) .flash {
+  @include motion {
+    animation: domain-flash 1100ms var(--ease-out) both;
+  }
+}
+
+// --- texto -------------------------------------------------------------------
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.9rem, 2.4vw, 1.5rem);
+  max-width: 60rem;
+  padding-inline: var(--gutter);
+}
+
+.kanji,
+.title,
+.technique,
+.note {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 900ms var(--ease-out),
+    filter 900ms var(--ease-out),
+    transform 900ms var(--ease-out);
+}
+
+:host(.at-2) .kanji,
+:host(.at-3) .title,
+:host(.at-4) .technique,
+:host(.at-4) .note {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+.kanji {
+  font-size: clamp(1.1rem, 0.9rem + 1vw, 1.6rem);
+  letter-spacing: 0.7em;
+  padding-left: 0.7em;
+  color: var(--gold);
+  text-shadow: 0 0 24px color-mix(in oklab, var(--gold) 60%, transparent);
+}
+
+// El título llega comprimido y desenfocado, y se expande hasta asentarse.
+.title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.3rem, 1rem + 7vw, 6.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.14em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--cream);
+  text-shadow:
+    0 0 60px color-mix(in oklab, var(--gold) 45%, transparent),
+    0 0 2px rgba(255, 255, 255, 0.6);
+  transform: scale(1.25);
+  filter: blur(18px);
+  transition:
+    opacity 1400ms var(--ease-out),
+    filter 1400ms var(--ease-out),
+    transform 1400ms var(--ease-out),
+    letter-spacing 1800ms var(--ease-out);
+}
+
+:host(.at-3) .title {
+  letter-spacing: 0.01em;
+}
+
+.technique {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 0.95rem + 0.9vw, 1.6rem);
+  color: var(--rose);
+}
+
+.technique__key {
+  @include label(0.62rem);
+  margin-right: 0.7rem;
+  color: color-mix(in oklab, var(--cream) 55%, transparent);
+  font-style: normal;
+}
+
+.note {
+  @include label(0.58rem);
+  color: color-mix(in oklab, var(--cream) 62%, transparent);
+  letter-spacing: 0.3em;
+  transition-delay: 700ms;
+}
+
+@keyframes domain-flash {
+  0% {
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}

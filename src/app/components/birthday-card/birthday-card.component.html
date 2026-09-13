@@ -1,0 +1,105 @@
+<div class="sky" aria-hidden="true">
+  <app-particles [active]="true" [count]="46" />
+</div>
+
+<main class="stage">
+  @if (state() === 'closed') {
+    <section class="card card--front" aria-labelledby="card-to">
+      <p class="kicker">{{ card.envelopeNote }}</p>
+
+      <svg class="cake" viewBox="0 0 120 110" aria-hidden="true" focusable="false">
+        <ellipse cx="60" cy="101" rx="52" ry="6" fill="rgba(159, 114, 40, 0.22)" />
+        <rect x="16" y="62" width="88" height="38" rx="9" fill="#e8788f" />
+        <path
+          d="M16 71q0-9 9-9h70q9 0 9 9v5q-5 7-10 0q-5 8-11 0q-6 8-12 0q-6 8-12 0q-6 8-12 0q-6 8-11 0q-5 7-10 0q-5 7-10 0z"
+          fill="#fff6ec"
+        />
+        <rect x="30" y="38" width="60" height="27" rx="8" fill="#f4c9d3" />
+        <path d="M30 46q0-8 8-8h44q8 0 8 8v3q-5 6-10 0q-5 7-10 0q-5 7-10 0q-5 7-10 0q-5 6-10 0z" fill="#fff6ec" />
+        <circle cx="40" cy="85" r="2" fill="#e9c27c" />
+        <circle cx="60" cy="90" r="2" fill="#fff6ec" />
+        <circle cx="80" cy="84" r="2" fill="#e9c27c" />
+        <circle cx="48" cy="57" r="1.6" fill="#e8788f" />
+        <circle cx="72" cy="58" r="1.6" fill="#e8788f" />
+        <rect x="56" y="18" width="8" height="21" rx="2.5" fill="#e9c27c" />
+        <circle class="cake__glow" cx="60" cy="11" r="11" fill="rgba(255, 190, 90, 0.32)" />
+        <path class="cake__flame" d="M60 2c6 7 6.5 12.5 0 15.5c-6.5-3-6-8.5 0-15.5z" fill="#ffb347" />
+      </svg>
+
+      <p class="to" id="card-to">
+        <span class="to__label">{{ card.to }}</span>
+        <span class="to__name">{{ card.name }}</span>
+      </p>
+
+      <p class="front-line">{{ card.frontLine }}</p>
+
+      <button type="button" class="open" (click)="open()">
+        <span>{{ card.openAction }}</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            d="M12 20.5s-7.5-4.6-7.5-10.3A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.5 2.6c0 5.7-7.5 10.3-7.5 10.3z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </section>
+  } @else {
+    <article class="card card--inside" #inside tabindex="-1" aria-labelledby="card-heading">
+      <div class="confetti" aria-hidden="true">
+        @for (piece of confetti; track $index) {
+          <i
+            class="confetti__piece"
+            [class.confetti__piece--round]="piece.round"
+            [style.--dx]="piece.dx"
+            [style.--dy]="piece.dy"
+            [style.--spin]="piece.spin"
+            [style.--delay]="piece.delay"
+            [style.--tint]="piece.tint"
+          ></i>
+        }
+      </div>
+
+      <p class="eyebrow">{{ card.eyebrow }}</p>
+
+      <h1 class="heading" id="card-heading">
+        {{ card.greeting }}<br />
+        <em class="heading__name">{{ card.name }}!</em>
+      </h1>
+
+      <span class="divider" aria-hidden="true"></span>
+
+      <div class="message">
+        @for (line of card.message; track line; let i = $index) {
+          <p class="message__line" [style.--i]="i">{{ line }}</p>
+        }
+      </div>
+
+      <p class="wish">{{ card.wish }}</p>
+
+      <p class="sign">
+        <span>{{ card.signOff }}</span>
+        <span class="sign__name">{{ card.signature }}</span>
+      </p>
+
+      <footer class="secret">
+        <button
+          #seal
+          type="button"
+          class="seal"
+          [attr.data-taps]="taps()"
+          [disabled]="state() === 'breaking'"
+          [attr.aria-label]="card.sealLabel"
+          (click)="tapSeal()"
+        >
+          <span class="seal__glyph" aria-hidden="true">∞</span>
+        </button>
+
+        <p class="postscript" aria-live="polite">{{ postscript() }}</p>
+      </footer>
+    </article>
+  }
+</main>
+
+@if (state() === 'breaking') {
+  <div class="void" aria-hidden="true" [style.--x]="origin().x" [style.--y]="origin().y"></div>
+}

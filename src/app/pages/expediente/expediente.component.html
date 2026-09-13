@@ -37,6 +37,14 @@
   </main>
 }
 
-@if (!experience.isOpen()) {
+@if (experience.stage() === 'card') {
+  <app-birthday-card />
+}
+
+@if (experience.stage() === 'domain') {
+  <app-domain-opening />
+}
+
+@if (experience.showsIntro()) {
   <app-intro />
 }

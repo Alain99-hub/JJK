@@ -7,15 +7,16 @@ import { ExperienceStage, Phase } from '../../models/phase.model';
 /**
  * Estado global de la experiencia.
  *
- * Guarda en qué punto del expediente está el lector y traduce la fase activa a
- * `--warmth`, la variable CSS que va calentando la paleta: el informe empieza
- * frío y termina en tonos cálidos sin un solo corte brusco.
+ * Guarda en qué punto está la lectora — tarjeta, expansión de dominio o
+ * expediente — y traduce la fase activa a `--warmth`, la variable CSS que va
+ * calentando la paleta: el informe empieza frío y termina en tonos cálidos sin
+ * un solo corte brusco.
  */
 @Injectable({ providedIn: 'root' })
 export class ExperienceService {
   private readonly document = inject(DOCUMENT);
 
-  readonly stage = signal<ExperienceStage>('locked');
+  readonly stage = signal<ExperienceStage>('card');
   readonly activePhaseId = signal<string>(PHASES[0].id);
   readonly warmth = signal(0);
 
@@ -24,7 +25,12 @@ export class ExperienceService {
   readonly isSealed = computed(() => this.stage() !== 'open');
   readonly isOpen = computed(() => this.stage() === 'open');
   /** El expediente se monta ya durante la apertura, para que el barrido lo descubra. */
-  readonly isMounted = computed(() => this.stage() !== 'locked');
+  readonly isMounted = computed(() => this.stage() === 'unlocking' || this.stage() === 'open');
+  /** La pantalla de bloqueo espera debajo de la expansión, lista para quedar al descubierto. */
+  readonly showsIntro = computed(() => {
+    const stage = this.stage();
+    return stage === 'domain' || stage === 'locked' || stage === 'unlocking';
+  });
   readonly activePhaseIndex = computed(() =>
     Math.max(
       0,
@@ -41,6 +47,20 @@ export class ExperienceService {
       // Mientras el expediente sigue sellado no se puede hacer scroll por detrás.
       this.document.body.classList.toggle('is-sealed', this.isSealed());
     });
+  }
+
+  /** El sello de la tarjeta se rompió: arranca la expansión de dominio. */
+  expandDomain(): void {
+    if (this.stage() === 'card') {
+      this.stage.set('domain');
+    }
+  }
+
+  /** La expansión terminó de disiparse: queda a la vista el expediente sellado. */
+  completeDomain(): void {
+    if (this.stage() === 'domain') {
+      this.stage.set('locked');
+    }
   }
 
   /** Arranca la secuencia de desencriptado disparada por «Abrir expediente». */

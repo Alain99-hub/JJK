@@ -1,5 +1,8 @@
-/** Estado global de la experiencia: sellada, abriéndose o abierta. */
-export type ExperienceStage = 'locked' | 'unlocking' | 'open';
+/**
+ * Estado global de la experiencia: tarjeta de cumpleaños, expansión de dominio
+ * (el secreto de la tarjeta), expediente sellado, abriéndose o abierto.
+ */
+export type ExperienceStage = 'card' | 'domain' | 'locked' | 'unlocking' | 'open';
 
 /**
  * Una fase del expediente. `warmth` (0 → 1) define la temperatura de color
