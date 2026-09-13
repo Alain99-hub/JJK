@@ -188,7 +188,7 @@ export const CLOSING = {
 export const BIRTHDAY = {
   envelopeNote: 'Tienes correspondencia',
   to: 'Para',
-  name: 'Astrid',
+  name: 'Dyane',
   frontLine: 'Abrir con cuidado: contiene cariño en exceso.',
   openAction: 'Abrir tarjeta',
   eyebrow: 'Hoy es tu día',
