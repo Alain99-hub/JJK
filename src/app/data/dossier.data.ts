@@ -189,7 +189,7 @@ export const BIRTHDAY = {
   envelopeNote: 'Tienes correspondencia',
   to: 'Para',
   name: 'Dyane',
-  frontLine: 'Abrir con cuidado: contiene cariño en exceso.',
+  frontLine: 'Un pequeño detalle para ti.',
   openAction: 'Abrir tarjeta',
   eyebrow: 'Hoy es tu día',
   greeting: '¡Feliz cumpleaños,',
